@@ -2,8 +2,12 @@ def json_parser(filename):
     
     import json
 
-    with open(filename) as datafile:
-        json_data = json.load(datafile)
+    try:
+        with open(filename) as datafile:
+            json_data = json.load(datafile)
+    except:
+        print('Файл поврежден, либо отсутствует')
+        return []
 
     for item in json_data['rss']['channel']['items']:
         try:
@@ -16,7 +20,13 @@ def json_parser(filename):
 def xml_parser(filename):
 
     import xml.etree.ElementTree as ET
-    tree = ET.parse(filename)
+
+    try:
+        tree = ET.parse(filename)
+    except:
+        print('Файл поврежден, либо отсутствует')
+        return []
+
     items = tree.findall('.//item')
 
     for item in items:
@@ -30,8 +40,11 @@ def xml_parser(filename):
     return description_list
 
 def get_word_tuples(description_list, min_length = 6):
-
+    
+    if len(description_list) == 0:
+        return ()
     for description in description_list:
+        
         for word in description.split():
             if len(word) > min_length:
                 try:
@@ -40,6 +53,8 @@ def get_word_tuples(description_list, min_length = 6):
                     word_dict[word] = 1
                 except NameError:
                     word_dict = {}
+            else:
+                continue
 
     word_tuples = list(word_dict.items())
 
@@ -67,3 +82,5 @@ print(sort_word(10, 'files/newsafr.json', json = True))
 print(sort_word(10, 'files/newsafr.xml', xml = True))
 #Не указываем формат
 print(sort_word(10, 'files/newsafr.xml'))
+
+
