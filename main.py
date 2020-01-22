@@ -3,11 +3,10 @@ def json_spider(parent, description_list = []):
     for item in parent:
         if type(parent) == list:
             json_spider(item)
-        else:
-            if type(parent[item]) != str:
-                json_spider(parent[item])
-            if len(parent[item]) > 150:
-                description_list.append(parent[item])
+        elif type(parent[item]) != str:
+            json_spider(parent[item])
+        elif len(parent[item]) > 150:
+            description_list.append(parent[item])
 
     return description_list   
 
@@ -31,7 +30,7 @@ def xml_spider(parent_element, description_list = []):
     for element in parent_element:
         if len(element.text) > 150:
             description_list.append(element.text)
-        xml_spider(element, description_list)
+        xml_spider(element)
     return description_list
 
 def xml_parser(filename):
@@ -92,7 +91,7 @@ def sort_word(selection, filename, json = False, xml = False):
 #10 наиболее часто встречающихся слов (json)
 print(sort_word(10, 'files/newsafr.json', json = True))
 #10 наиболее часто встречающихся слов (xml)
-#print(sort_word(10, 'files/newsafr.xml', xml = True))
+print(sort_word(10, 'files/newsafr.xml', xml = True))
 #Не указываем формат
 #print(sort_word(10, 'files/newsafr.xml'))
 
