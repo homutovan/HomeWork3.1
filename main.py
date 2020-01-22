@@ -1,20 +1,64 @@
-import json
+def json_parser(filename):
+    
+    import json
 
-with open('files/newsafr.json') as datafile:
-  json_data = json.load(datafile)
+    with open(filename) as datafile:
+        json_data = json.load(datafile)
 
-word_dict = {}
+    for item in json_data['rss']['channel']['items']:
+        try:
+            description_list.append(item['description'])
+        except NameError:
+            description_list = []
 
-for item in json_data['rss']['channel']['items']:
-    for word in item['description'].split():
-        if len(word) > 6:
-            if word not in word_dict.keys():
-                word_dict[word] = 1
-            else:
-                word_dict[word]  += 1
+    return description_list
 
-word_tuples = list(word_dict.items())
-sorted_word_tuples = sorted(word_tuples, key = lambda word_tuples: word_tuples[1])
+def xml_parser(filename):
 
-#10 наиболее часто встречающихся слов
-print(sorted_word_tuples[-10:])
+    import xml.etree.ElementTree as ET
+    tree = ET.parse(filename)
+    items = tree.findall('.//item')
+
+    for item in items:
+        for element in item:
+            if element.tag == 'description':
+                try:
+                    description_list.append(element.text)
+                except NameError:
+                    description_list = []
+
+    return description_list
+
+def get_word_tuples(description_list):
+
+    for description in description_list:
+        for word in description.split():
+            if len(word) > 6:
+                try:
+                    word_dict[word] += 1
+                except KeyError: 
+                    word_dict[word] = 1
+                except NameError:
+                    word_dict = {}
+
+    word_tuples = list(word_dict.items())
+
+    return(word_tuples)
+
+def sort_word(filename, json = False, xml = False):
+
+    if json:
+        description_list = json_parser(filename)
+    
+    if xml:
+        description_list = xml_parser(filename)
+    
+    word_tuples = get_word_tuples(description_list)
+    sorted_word_tuples = sorted(word_tuples, key = lambda word_tuples: word_tuples[1])
+
+    return sorted_word_tuples
+  
+#10 наиболее часто встречающихся слов (json)
+print(sort_word('files/newsafr.json', json = True)[-10:])
+#10 наиболее часто встречающихся слов (xml)
+print(sort_word('files/newsafr.xml', xml = True)[-10:])
