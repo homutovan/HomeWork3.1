@@ -11,7 +11,7 @@ def json_spider(parent, description_list = []):
                 try:
                     json_spider(parent[item])
                 except TypeError:
-                    print(type(parent[item]))
+                    continue
 
     return description_list
 
