@@ -17,6 +17,14 @@ def json_parser(filename):
 
     return description_list
 
+def xml_spider(parent_element, description_list = []):
+
+    for element in parent_element:
+        if len(element.text) > 150:
+            description_list.append(element.text)
+        xml_spider(element, description_list)
+    return description_list
+
 def xml_parser(filename):
 
     import xml.etree.ElementTree as ET
@@ -27,15 +35,9 @@ def xml_parser(filename):
         print('Файл поврежден, либо отсутствует')
         return []
 
-    items = tree.findall('.//item')
+    root = tree.getroot()
 
-    for item in items:
-        for element in item:
-            if element.tag == 'description':
-                try:
-                    description_list.append(element.text)
-                except NameError:
-                    description_list = []
+    description_list = xml_spider(root)
 
     return description_list
 
@@ -77,10 +79,16 @@ def sort_word(selection, filename, json = False, xml = False):
     return sorted_word_tuples[-selection:]
   
 #10 наиболее часто встречающихся слов (json)
-print(sort_word(10, 'files/newsafr.json', json = True))
+#print(sort_word(10, 'files/newsafr.json', json = True))
 #10 наиболее часто встречающихся слов (xml)
-print(sort_word(10, 'files/newsafr.xml', xml = True))
+#print(sort_word(10, 'files/newsafr.xml', xml = True))
 #Не указываем формат
-print(sort_word(10, 'files/newsafr.xml'))
+#print(sort_word(10, 'files/newsafr.xml'))
+
+
+
+
+
+
 
 
