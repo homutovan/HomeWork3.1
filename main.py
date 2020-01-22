@@ -1,3 +1,20 @@
+def json_spider(parent, description_list = []):
+
+    if type(parent) == list:
+        for item in parent:
+          json_spider(item)
+    else:
+        for item in parent:
+            if len(parent[item]) > 150:
+                description_list.append(parent[item])
+            if type(parent[item]) != str:
+                try:
+                    json_spider(parent[item])
+                except TypeError:
+                    print(type(parent[item]))
+
+    return description_list
+
 def json_parser(filename):
     
     import json
@@ -9,11 +26,7 @@ def json_parser(filename):
         print('Файл поврежден, либо отсутствует')
         return []
 
-    for item in json_data['rss']['channel']['items']:
-        try:
-            description_list.append(item['description'])
-        except NameError:
-            description_list = []
+    description_list = json_spider(json_data)
 
     return description_list
 
@@ -77,18 +90,13 @@ def sort_word(selection, filename, json = False, xml = False):
     sorted_word_tuples = sorted(word_tuples, key = lambda word_tuples: word_tuples[1])
 
     return sorted_word_tuples[-selection:]
+
+
   
 #10 наиболее часто встречающихся слов (json)
-#print(sort_word(10, 'files/newsafr.json', json = True))
+print(sort_word(10, 'files/newsafr.json', json = True))
 #10 наиболее часто встречающихся слов (xml)
-#print(sort_word(10, 'files/newsafr.xml', xml = True))
+print(sort_word(10, 'files/newsafr.xml', xml = True))
 #Не указываем формат
 #print(sort_word(10, 'files/newsafr.xml'))
-
-
-
-
-
-
-
 
