@@ -29,11 +29,11 @@ def xml_parser(filename):
 
     return description_list
 
-def get_word_tuples(description_list):
+def get_word_tuples(description_list, min_length = 6):
 
     for description in description_list:
         for word in description.split():
-            if len(word) > 6:
+            if len(word) > min_length:
                 try:
                     word_dict[word] += 1
                 except KeyError: 
@@ -45,20 +45,25 @@ def get_word_tuples(description_list):
 
     return(word_tuples)
 
-def sort_word(filename, json = False, xml = False):
+def sort_word(selection, filename, json = False, xml = False):
 
     if json:
         description_list = json_parser(filename)
     
     if xml:
         description_list = xml_parser(filename)
+
+    if (xml and json) or (not xml and not json):
+        return 'Необходимо указать формат данных'
     
     word_tuples = get_word_tuples(description_list)
     sorted_word_tuples = sorted(word_tuples, key = lambda word_tuples: word_tuples[1])
 
-    return sorted_word_tuples
+    return sorted_word_tuples[-selection:]
   
 #10 наиболее часто встречающихся слов (json)
-print(sort_word('files/newsafr.json', json = True)[-10:])
+print(sort_word(10, 'files/newsafr.json', json = True))
 #10 наиболее часто встречающихся слов (xml)
-print(sort_word('files/newsafr.xml', xml = True)[-10:])
+print(sort_word(10, 'files/newsafr.xml', xml = True))
+#Не указываем формат
+print(sort_word(10, 'files/newsafr.xml'))
