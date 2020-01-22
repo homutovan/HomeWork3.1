@@ -1,16 +1,16 @@
 def json_spider(parent, description_list = []):
 
-    if type(parent) == list:
-        for item in parent:
-          json_spider(item)
-    else:
-        for item in parent:
+    for item in parent:
+        if type(parent) == list:
+            json_spider(item)
+        else:
+            if type(parent[item]) != str:
+                print(type(parent[item]))
+                json_spider(parent[item])
             if len(parent[item]) > 150:
                 description_list.append(parent[item])
-            if type(parent[item]) != str:
-                    json_spider(parent[item])
 
-    return description_list
+    return description_list   
 
 def json_parser(filename):
     
@@ -93,7 +93,7 @@ def sort_word(selection, filename, json = False, xml = False):
 #10 наиболее часто встречающихся слов (json)
 print(sort_word(10, 'files/newsafr.json', json = True))
 #10 наиболее часто встречающихся слов (xml)
-print(sort_word(10, 'files/newsafr.xml', xml = True))
+#print(sort_word(10, 'files/newsafr.xml', xml = True))
 #Не указываем формат
 #print(sort_word(10, 'files/newsafr.xml'))
 
