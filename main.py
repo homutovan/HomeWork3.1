@@ -5,7 +5,6 @@ def json_spider(parent, description_list = []):
             json_spider(item)
         else:
             if type(parent[item]) != str:
-                print(type(parent[item]))
                 json_spider(parent[item])
             if len(parent[item]) > 150:
                 description_list.append(parent[item])
