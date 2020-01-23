@@ -17,8 +17,8 @@ def json_parser(filename):
     try:
         with open(filename) as datafile:
             json_data = json.load(datafile)
-    except:
-        print('Файл поврежден, либо отсутствует')
+    except Exception as e:
+        print('Ошибка открытия файла', e)
         return []
 
     description_list = json_spider(json_data)
@@ -34,13 +34,12 @@ def xml_spider(parent_element, description_list = []):
     return description_list
 
 def xml_parser(filename):
-
-    import xml.etree.ElementTree as ET
-
+    
     try:
+        import xml.etree.ElementTree as ET
         tree = ET.parse(filename)
-    except:
-        print('Файл поврежден, либо отсутствует')
+    except Exception as e:
+        print('Ошибка открытия файла', e)
         return []
 
     root = tree.getroot()
