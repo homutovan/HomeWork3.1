@@ -63,6 +63,7 @@ def get_word_tuples(description_list, min_length = 6):
                     word_dict[word] = 1
                 except NameError:
                     word_dict = {}
+                    word_dict[word] = 1
             else:
                 continue
 
@@ -94,4 +95,3 @@ print(sort_word(10, 'files/newsafr.json', json = True))
 print(sort_word(10, 'files/newsafr.xml', xml = True))
 #Не указываем формат
 #print(sort_word(10, 'files/newsafr.xml'))
-
