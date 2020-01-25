@@ -55,6 +55,7 @@ def get_word_tuples(description_list, min_length = 6):
     for description in description_list:
         
         for word in description.split():
+            word = word.lower()
             if len(word) > min_length:
                 try:
                     word_dict[word] += 1
